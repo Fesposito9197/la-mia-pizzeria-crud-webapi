@@ -18,5 +18,19 @@ namespace la_mia_pizzeria_static.Api
             return Ok(pizzas);
 
         }
+
+        [HttpGet("{id}")]
+        public IActionResult GetPizzas(int id)
+        {
+            using var ctx = new PizzeriaContext();
+            var pizza = ctx.Pizzas.FirstOrDefault(p => p.Id == id);
+
+            if (pizza == null)
+            {
+                return NotFound();
+
+            }
+            return Ok(pizza);
+        }
     }
 }
