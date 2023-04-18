@@ -32,5 +32,51 @@ namespace la_mia_pizzeria_static.Api
             }
             return Ok(pizza);
         }
+
+
+        [HttpPut("{id}")]
+        public IActionResult PutPizza(int id , [FromBody] Pizza pizza) 
+        {
+            using var ctx = new PizzeriaContext();
+            var savedPizza = ctx.Pizzas.FirstOrDefault(pizza => pizza.Id == id);
+            if (savedPizza == null)
+            {
+                return NotFound();
+            }
+            savedPizza.Name = pizza.Name;
+            savedPizza.Description = pizza.Description;
+            savedPizza.Foto = pizza.Foto;
+            savedPizza.Price = pizza.Price;
+            savedPizza.CategoriaId = pizza.CategoriaId;
+
+            ctx.SaveChanges();
+
+            return Ok(savedPizza);
+        }
+
+        [HttpDelete("{id}")]
+        public IActionResult DeletePizza(int id)
+        {
+            using var ctx = new PizzeriaContext();
+            var savedPizza = ctx.Pizzas?.FirstOrDefault(p => p.Id == id);
+
+            if (savedPizza == null)
+            {
+                return NotFound();
+            }
+            ctx.Pizzas.Remove(savedPizza);
+            ctx.SaveChanges();
+            return Ok(savedPizza);
+        }
+
+        [HttpPost]
+        public IActionResult CreatePizza( Pizza pizza)
+        {
+            using var ctx = new PizzeriaContext();
+            ctx.Pizzas.Add(pizza);
+            ctx.SaveChanges();
+            return Ok(pizza);
+            
+        }
     }
 }
