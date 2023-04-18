@@ -1,0 +1,77 @@
+﻿@model Pizza[]
+
+@{
+    Layout = "_myLayout";
+    ViewData["title"] = "My pizzas";
+    var pizzas = Model;
+}
+@if (User.IsInRole("ADMIN"))
+{
+    <div class="text-center">
+
+    <a class="text-decoration-none btn btn-info mt-3" href="@Url.Action("Create" , "Pizza")">Aggiungi una pizza</a>
+    
+
+    </div>
+    
+}
+   
+@if(pizzas.Length is 0)
+{
+    <p class="text-center" >Nessuna pizza da mostrare!</p>
+}
+else
+{
+<div class="text-center container">
+    <table class="table">
+        <thead>
+            
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Nome</th>
+                <th scope="col">Descrizione</th>
+                <th scope="col">Prezzo(€)</th>
+                @if (User.IsInRole("ADMIN"))
+                {
+                    <th scope="col">Action</th>
+                        
+                }
+            </tr>
+                
+        </thead>
+        <tbody>
+            @foreach (var pizza in pizzas)
+            {
+                <tr>
+                    <td>@pizza.Id</td>
+                    <td class="fw-bold">
+                        <a class="text-decoration-none" href="@Url.Action("Detail", "Pizza", new {Id = pizza.Id})">@pizza.Name</a>
+                    </td>
+                    <td class="fw-bold">@pizza.Description</td>
+                    <td class="fw-bold">@pizza.Price</td>
+                    @if (User.IsInRole("ADMIN"))
+                    {
+                        <td class=" fw-bold">
+                            <a class="btn btn-warning mb-1" href="@Url.Action("Update", "Pizza", new {Id = pizza.Id})"><i class="fa-solid fa-pencil" style="color: #000000;"></i></a>
+
+                            <form method="post" asp-controller="Pizza" asp-action="Delete" asp-route-id="@pizza.Id">
+                                @Html.AntiForgeryToken()
+                                <button type="submit" class="btn btn-danger">
+                                    <i class="fa-solid fa-dumpster-fire fa-shake" style="color: #000000;"></i>
+                                </button>
+                            </form>
+                     
+                        </td>
+                            
+                    }
+                     
+                </tr>
+                 
+            }
+           
+        </tbody>
+    </table>
+</div>
+    
+}
+    
