@@ -9,12 +9,13 @@ namespace la_mia_pizzeria_static.Api
     [ApiController]
     public class PizzaController : ControllerBase
     {
-        public IActionResult GetPizzas()
+        public IActionResult GetPizzas([FromQuery] string? title)
         {
             using var ctx = new PizzeriaContext();
-            IQueryable<Pizza> pizzas = ctx.Pizzas;
+            var pizzas = ctx.Pizzas.Where(p=> title ==null || p.Name.ToLower().Contains(title.ToLower()))
+                .ToList();
 
-            return Ok(pizzas.ToList());
+            return Ok(pizzas);
 
         }
     }
